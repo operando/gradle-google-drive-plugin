@@ -1,0 +1,29 @@
+apply plugin: "ru.kinca.google-drive-uploader"
+
+buildscript {
+    repositories {
+        mavenCentral()
+//        maven {
+//            url "https://plugins.gradle.org/m2/"
+//        }
+        // local
+        mavenLocal()
+    }
+    dependencies {
+        classpath "ru.kinca.gradle:google-drive-uploader:1.0.0"
+    }
+}
+
+googleDrive {
+    // Missing folders will be created
+    destinationFolder = 'test/upload'
+
+    // If not specified, simple file name is used
+    destinationName = 'build.gradle'
+
+    file = new File("examples/build.gradle")
+
+    // Do not put those directly into the build file
+    clientId = '<YOUR CLIENT ID>'
+    clientSecret = '<YOUR CLIENT SECRET>'
+}
