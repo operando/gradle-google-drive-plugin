@@ -7,10 +7,12 @@ buildscript {
 //            url "https://plugins.gradle.org/m2/"
 //        }
         // local
-        mavenLocal()
+//        mavenLocal()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "ru.kinca.gradle:google-drive-uploader:1.0.0"
+//        classpath "ru.kinca.gradle:google-drive-uploader:1.0.0"
+        classpath 'com.github.operando:gradle-google-drive-plugin:1.0.1'
     }
 }
 
