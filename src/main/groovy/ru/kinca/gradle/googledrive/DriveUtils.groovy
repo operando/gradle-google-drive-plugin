@@ -8,16 +8,14 @@ import com.google.api.services.drive.model.File
  *
  * @author Valentin Naumov
  */
-@SuppressWarnings([ 'DuplicateStringLiteral', 'UnnecessaryGString' ])
-final class DriveUtils
-{
+@SuppressWarnings(['DuplicateStringLiteral', 'UnnecessaryGString'])
+final class DriveUtils {
     private static final String FOLDER_MIME_TYPE =
-        'application/vnd.google-apps.folder'
+            'application/vnd.google-apps.folder'
     private static final String DEFAULT_SPACES = 'drive'
     private static final String DEFAULT_CORPORA = 'user'
 
-    private DriveUtils()
-    {
+    private DriveUtils() {
     }
 
     /**
@@ -32,32 +30,28 @@ final class DriveUtils
      * @return id of created folder
      */
     static String makeDirs(
-        Drive drive,
-        String parentId,
-        List<String> path)
-    {
+            Drive drive,
+            String parentId,
+            List<String> path) {
         path.inject(parentId) { String currentParent, currName ->
             List<File> existingFolders = drive.files().list()
-                .setSpaces(DEFAULT_SPACES)
-                .setCorpora(DEFAULT_CORPORA)
-                .setQ("name = '$currName'" +
+                    .setSpaces(DEFAULT_SPACES)
+                    .setCorpora(DEFAULT_CORPORA)
+                    .setQ("name = '$currName'" +
                     " and '$currentParent' in parents" +
                     " and not trashed" +
                     " and mimeType = '$FOLDER_MIME_TYPE'")
-                .execute()
-                .getFiles()
+                    .execute()
+                    .getFiles()
 
             File folder
-            if (existingFolders)
-            {
+            if (existingFolders) {
                 folder = existingFolders[0]
-            }
-            else
-            {
+            } else {
                 def toCreate = new File()
-                    .setName(currName)
-                    .setMimeType(FOLDER_MIME_TYPE)
-                    .setParents([currentParent])
+                        .setName(currName)
+                        .setMimeType(FOLDER_MIME_TYPE)
+                        .setParents([currentParent])
 
                 folder = drive.files().create(toCreate).execute()
             }
@@ -78,20 +72,19 @@ final class DriveUtils
      * @return list of files found.
      */
     static List<File> findInFolder(
-        Drive drive,
-        String parentId,
-        String childName)
-    {
+            Drive drive,
+            String parentId,
+            String childName) {
         String query = "'$parentId' in parents" +
-            " and not trashed" +
-            " and name = '$childName'"
+                " and not trashed" +
+                " and name = '$childName'"
         drive.files().list()
-            .setSpaces(DEFAULT_SPACES)
-            .setCorpora(DEFAULT_CORPORA)
-            .setFields('files(id, name)')
-            .setQ(query)
-            .execute()
-            .getFiles()
+                .setSpaces(DEFAULT_SPACES)
+                .setCorpora(DEFAULT_CORPORA)
+                .setFields('files(id, name)')
+                .setQ(query)
+                .execute()
+                .getFiles()
     }
 
     /**
@@ -106,10 +99,9 @@ final class DriveUtils
      * @return list of files found.
      */
     static List<File> findInFolder(
-        Drive drive,
-        File parent,
-        String childName)
-    {
+            Drive drive,
+            File parent,
+            String childName) {
         findInFolder(drive, parent.getId(), childName)
     }
 
@@ -123,17 +115,15 @@ final class DriveUtils
      * @return
      */
     static boolean hasFile(
-        Drive drive,
-        File parent,
-        String childName)
-    {
+            Drive drive,
+            File parent,
+            String childName) {
         findInFolder(drive, parent.getId(), childName).any {
             it.getMimeType() != FOLDER_MIME_TYPE
         }
     }
 
-    static File newFolder()
-    {
+    static File newFolder() {
         new File().setMimeType(FOLDER_MIME_TYPE)
     }
 }

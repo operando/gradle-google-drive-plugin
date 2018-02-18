@@ -23,12 +23,9 @@ import java.security.GeneralSecurityException
  * @author Valentin Naumov
  */
 @Slf4j('logger')
-class GoogleClient
-{
-    private static final JsonFactory JSON_FACTORY =
-        JacksonFactory.getDefaultInstance()
-    private static final String APPLICATION_NAME =
-        'ru.kinca.google-drive-uploader'
+class GoogleClient {
+    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance()
+    private static final String APPLICATION_NAME = 'ru.kinca.google-drive-uploader'
 
     /**
      * If modifying these scopes, delete your previously saved credentials.
@@ -45,47 +42,41 @@ class GoogleClient
     private Drive drive
 
     GoogleClient(
-        String clientId,
-        String clientSecret,
-        DataStoreFactory dataStoreFactory)
-    {
+            String clientId,
+            String clientSecret,
+            DataStoreFactory dataStoreFactory) {
         this.clientSecret = clientSecret
         this.clientId = clientId
         this.dataStoreFactory = dataStoreFactory
     }
 
-    private void init()
-    {
-        if (!httpTransport)
-        {
-            try
-            {
+    private void init() {
+        if (!httpTransport) {
+            try {
                 httpTransport = GoogleNetHttpTransport.newTrustedTransport()
             }
-            catch (GeneralSecurityException | IOException e)
-            {
+            catch (GeneralSecurityException | IOException e) {
                 throw new RuntimeException(
-                    'Unable to establish http transport.', e)
+                        'Unable to establish http transport.', e)
             }
         }
     }
 
     private void authorize()
-    throws IOException
-    {
+            throws IOException {
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow =
-            new GoogleAuthorizationCodeFlow.Builder(
-                httpTransport,
-                JSON_FACTORY,
-                clientId, clientSecret,
-                SCOPES)
-                .setDataStoreFactory(dataStoreFactory)
-                .setAccessType('offline')
-                .build()
+                new GoogleAuthorizationCodeFlow.Builder(
+                        httpTransport,
+                        JSON_FACTORY,
+                        clientId, clientSecret,
+                        SCOPES)
+                        .setDataStoreFactory(dataStoreFactory)
+                        .setAccessType('offline')
+                        .build()
 
         credential = new AuthorizationCodeInstalledApp(
-            flow, new LocalServerReceiver()).authorize('drive-user')
+                flow, new LocalServerReceiver()).authorize('drive-user')
     }
 
     /**
@@ -94,17 +85,15 @@ class GoogleClient
      *
      * @return authorized and ready to use {@link Drive} instance.
      */
-    Drive getDrive()
-    {
-        if (drive)
-        {
+    Drive getDrive() {
+        if (drive) {
             return drive
         }
 
         init()
         authorize()
         new Drive.Builder(httpTransport, JSON_FACTORY, credential)
-            .setApplicationName(APPLICATION_NAME)
-            .build()
+                .setApplicationName(APPLICATION_NAME)
+                .build()
     }
 }

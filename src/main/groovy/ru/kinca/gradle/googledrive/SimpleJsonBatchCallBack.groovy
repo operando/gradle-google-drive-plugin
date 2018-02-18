@@ -11,31 +11,27 @@ import com.google.api.client.http.HttpHeaders
  * @author Valentin Naumov
  */
 class SimpleJsonBatchCallBack<T>
-extends JsonBatchCallback<T>
-{
+        extends JsonBatchCallback<T> {
     String failureMessage
 
     SimpleJsonBatchCallBack(
-        String failureMessage)
-    {
+            String failureMessage) {
         this.failureMessage = failureMessage
     }
 
     @Override
     void onFailure(
-        GoogleJsonError e,
-        HttpHeaders responseHeaders)
-    throws IOException
-    {
+            GoogleJsonError e,
+            HttpHeaders responseHeaders)
+            throws IOException {
         throw new RuntimeException("failureMessage. Response: $e")
     }
 
     @Override
     void onSuccess(
-        T object,
-        HttpHeaders responseHeaders)
-    throws IOException
-    {
+            T object,
+            HttpHeaders responseHeaders)
+            throws IOException {
         // Do nothing on success, just continue the program flow.
     }
 }
