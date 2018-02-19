@@ -25,8 +25,16 @@ extension named `googleDrive` to be defined, like so:
 
 [source,groovy]
 ----
-plugins {
-    id 'ru.kinca.google-drive-uploader' version '1.0.0'
+apply plugin: "ru.kinca.google-drive-uploader"
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.github.operando:gradle-google-drive-plugin:1.0.2'
+    }
 }
 
 googleDrive {
@@ -38,8 +46,14 @@ googleDrive {
 
     file = file('c:\\Users\\User\\Pictures\\kittens.jpg')
 
+    // Credential file path
+    credentialFile = new File(System.getProperty('user.home'), '.credentials/google-drive-uploader')
+
     // Default is true
     updateIfExists = false
+
+    // Save credential to memory. Not save to the file. Default is false
+    saveCredentialToMemory = true
 
     // Do not put those directly into the build file
     clientId  = '<YOUR CLIENT ID>'
@@ -81,9 +95,17 @@ rootProject.name = 'example-app'
 .build.gradle
 [source,groovy]
 ----
-plugins {
-    id 'ru.kinca.google-drive-uploader' version '1.0.0'
-    id 'application'
+apply plugin: "ru.kinca.google-drive-uploader"
+apply plugin: "application"
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.github.operando:gradle-google-drive-plugin:1.0.2'
+    }
 }
 
 mainClassName = 'ru.kinca.example.App'
@@ -92,6 +114,7 @@ googleDrive {
     destinationFolder = 'myapp/distributions'
 
     file = files(distZip).singleFile
+    credentialFile = new File(System.getProperty('user.home'), '.credentials/google-drive-uploader')
     clientId = driveClientId
     clientSecret = driveClientSecret
 }
