@@ -23,6 +23,8 @@ googleDrive {
     // If not specified, simple file name is used
     destinationName = 'build.gradle'
 
+    credentialFile = new File(System.getProperty('user.home'), '.credentials/google-drive-uploader')
+
     file = new File("examples/build.gradle")
 
     // Do not put those directly into the build file

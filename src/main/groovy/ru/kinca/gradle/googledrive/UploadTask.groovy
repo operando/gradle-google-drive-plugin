@@ -3,6 +3,7 @@ package ru.kinca.gradle.googledrive
 import com.google.api.client.googleapis.batch.BatchRequest
 import com.google.api.client.http.FileContent
 import com.google.api.client.util.store.FileDataStoreFactory
+import com.google.api.client.util.store.MemoryDataStoreFactory
 import com.google.api.services.drive.DriveRequest
 import com.google.api.services.drive.model.File as DriveFile
 import com.google.api.services.drive.model.Permission
@@ -23,18 +24,18 @@ import org.gradle.api.tasks.TaskAction
  */
 class UploadTask extends DefaultTask {
 
-    protected static final Boolean DEFAULT_UPDATE_IF_EXISTS = true
-
     ConfigExtension configExtension
 
     @TaskAction
     void upload() {
+        if (!configExtension.credentialFile) {
+            throw new GradleException("credentialFile is null.")
+        }
+
         GoogleClient googleClient = new GoogleClient(
                 configExtension.clientId,
                 configExtension.clientSecret,
-                new FileDataStoreFactory(
-                        new File(System.getProperty('user.home'),
-                                '.credentials/google-drive-uploader')))
+                new FileDataStoreFactory(configExtension.credentialFile))
 
         String destinationFolderId = DriveUtils.makeDirs(
                 googleClient.drive, 'root',

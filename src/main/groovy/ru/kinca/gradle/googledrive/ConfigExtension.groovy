@@ -17,6 +17,8 @@ class ConfigExtension {
 
     File file
 
+    File credentialFile
+
     String clientId
 
     String clientSecret

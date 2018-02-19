@@ -92,7 +92,7 @@ class GoogleClient {
 
         init()
         authorize()
-        new Drive.Builder(httpTransport, JSON_FACTORY, credential)
+        drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build()
     }
