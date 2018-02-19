@@ -25,5 +25,7 @@ class ConfigExtension {
 
     List<Permission> permissions = [new Permission().setType('anyone').setRole('reader')]
 
-    Boolean updateIfExists = true
+    boolean updateIfExists = true
+
+    boolean saveCredentialToMemory
 }

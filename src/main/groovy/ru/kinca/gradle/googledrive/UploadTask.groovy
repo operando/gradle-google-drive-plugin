@@ -35,7 +35,7 @@ class UploadTask extends DefaultTask {
         GoogleClient googleClient = new GoogleClient(
                 configExtension.clientId,
                 configExtension.clientSecret,
-                new FileDataStoreFactory(configExtension.credentialFile))
+                configExtension.saveCredentialToMemory ? MemoryDataStoreFactory.defaultInstance : new FileDataStoreFactory(configExtension.credentialFile))
 
         String destinationFolderId = DriveUtils.makeDirs(
                 googleClient.drive, 'root',
